@@ -1,41 +1,66 @@
+import time
 from selenium import webdriver
-import time 
 
-chrome_path = "C:\Users\Lanfia\Desktop\chromedriver.exe"    # the path of the chromedrive app on my pc
-driver = webdriver.Chrome(chrome_path)                      # creates a chrome instance called driver
+chrome_path = "C:\Users\Lanfia\Desktop\chromedriver.exe"
+driver = webdriver.Chrome(chrome_path)
 
-def login(url, username, password):
-  driver.get(url)                     #pass the desired url into the chrome instance called driver
-  username_element = driver.find_element_by_id('username')
-  username_element.send_keys(username)    #pass the given username into the box
-  
-  passwd_element = driver.find_element_by_name('password'0
-  passwd_element.send_keys(password)      #send the given password into the password element
-  
-  submit_element1 = driver.find_element_by_name('submit')   #finds the submit element
-  submit_element1.click()             #click the sumbit or 'Log in' button
-  
-  print 'Current Page: ', driver.title
-  
-  bu_brain_element = driver.find_element_by_css_selector("a[href*=ssomanager']")   
-  bu_brain_element.click()            #find and click the BU Brain tab 
-  
-  driver.swutch_to_window(driver.window_handles[1])     #switch to the new opened window
-  print "Current Page: ", driver.title
-  
-  student_element = driver.find_element_by_link_text("Student").click()   #finds and click the student tab
-  print "Current Page: ", driver.title
-  
-  registration_element = driver.find_element_by_link_text("Registration").click()
-  add_or_drop_element = driver.find_element_by_link_text("Add or Drop Courses").click()
-  submit_element2 = driver.find_element_by_xpath("//input[@type='submit']").click()
-  print "Current Page: ", driver.title
-  
-  
-  time.sleep(10)
-  driver.quit()
-  
-if "__name__" == "__main__":
-  login(url, username, password)
-  
- 
+	
+#add_or_drop_element = driver.find_element_by_link_text("Add or Drop Courses").click() #finds the add or drop courses and click it
+#submit_element1 = driver.find_element_by_tag_name("input").click()
+#submit_element2 = driver.find_element_by_xpath("//input[@type='submit']").click()
+#print 'Current Page: ', driver.title '''
+	
+	
+def login(url,username,password):
+	driver.get(url)
+	username_element = driver.find_element_by_id('username')
+	username_element.send_keys(username)
+	
+	passwd_element = driver.find_element_by_name('password')
+	passwd_element.send_keys(password)
+	
+	submit_element1 = driver.find_element_by_name('submit')
+	submit_element1.click()	
+	
+	
+def go_to_bu_brain():
+		bu_brain_element = driver.find_element_by_css_selector("a[href*='ssomanager']")
+		bu_brain_element.click()
+	
+		driver.switch_to_window(driver.window_handles[1]) #switch to the new window
+	
+def go_to_registration():
+	student_element = driver.find_element_by_link_text("Student").click() #find the student tab and click it
+	registration_element = driver.find_element_by_link_text("Registration").click()
+	
+def select_term(term_name):
+	loop_up_element = driver.find_element_by_link_text("Look Up Classes").click()
+	select_e = driver.find_element_by_xpath("//select[@name = 'p_term']/option[text()= '" + term_name +"' ]").click()
+	submit_e3 = driver.find_element_by_xpath("//input[@value = 'Submit']").click()	
+	
+def choose_course(num):
+	course_num = driver.find_element_by_xpath("//input[@name='sel_crse']")
+	course_num.send_keys(num)
+	submit_e4 = driver.find_element_by_xpath("//input[@name='SUB_BTN']").click()
+	
+def choose_cern(cern_num):
+	crn = driver.find_element_by_xpath("//a[text() ="+cern_num+']').click()
+	
+def class_e():
+	count = 0
+	for classes in driver.find_elements_by_class_name('ddtitle'):
+		if classes.text == "CS - Computer Science":
+			for sub in driver.find_element_by_xpath('.//div[@class="Title"]/a').text:
+				print sub
+				count += 1 
+				if count == 10:	break
+	
+	
+	
+login('http://my.binghamton.edu', username, password)
+go_to_bu_brain()
+go_to_registration()
+select_term('Fall 2017')
+choose_course("110")
+class_e()
+#choose_cern("16562")
